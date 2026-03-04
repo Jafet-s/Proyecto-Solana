@@ -20,3 +20,12 @@ echo 'export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH"' 
 source ~/.bashrc
 
 echo "--- Instalación de Rust completada ---"
+
+sudo apt update
+
+sudo apt install -y nodejs npm
+
+sudo npm install -g typescript   
+
+sudo npm install -g vite   
+
