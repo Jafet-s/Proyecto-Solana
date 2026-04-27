@@ -1,86 +1,44 @@
-# Primeros pasos en Solana
-![Banner](./images/SolanaBanner.jpg)
-Solana es una blockchain de capa 1, es decir, cuenta con su propia infraestructura y no depende de otras blockchains para funcionar. Se encuentra orientada al alto rendimiento, y fue creada para soportar aplicaciones descentralizadas a gran escala con costos mínimos y confirmaciones casi inmediatas. Su diseño prioriza la eficiencia en la ejecución y la paralelización de transacciones.
+# Badge System - Programa Solana
 
-Rust es el lenguaje principal para desarrollar programas en Solana. A través de él se implementa la lógica on-chain utilizando el modelo de cuentas y programas de la red, permitiendo construir contratos inteligentes seguros, eficientes y altamente optimizables.
+Un sistema descentralizado para la creación y gestión de cursos con sistema de insignias (badges) construido en Solana usando Anchor Framework.
 
-Puedes comenzar dándole Fork a este repositorio (abajo te explicamos como 👇)
+## Descripción
 
-Asegúrate de clonar este repositorio a tu cuenta usando el botón **`Fork`**.
+Este programa permite a educadores crear cursos y otorgar badges a estudiantes que completan los módulos requeridos. Cada badge es un NFT-like account en Solana que certifica el logro del estudiante.
 
-![fork](./images/fork.png)
+## Características
 
-* Puedes renombrar el repositorio a lo que sea que se ajuste con tu proyecto.
+- Crear cursos con nombre, descripción y número de módulos
+- Crear badges asociados a módulos específicos
+- Otorgar badges automáticamente al completar módulos
+- Actualizar información del curso
+- Eliminar cursos (solo si no tienen badges)
+- Verificar si un estudiante posee un badge
+- Control de acceso: solo el propietario puede modificar el curso
 
-## Solana Playground
-Solana Playground es un entorno de desarrollo online que permite escribir, compilar, desplegar y probar programas de Solana directamente desde el navegador, sin necesidad de instalar herramientas locales como Rust, Solana CLI o Anchor.
+## 📦 Estructura de Cuentas
 
-![Playground](./images/playground.png)
-
-Para abrir el **Playground** solo es necesario dar clic 👉 [Aquí](https://beta.solpg.io)
-
-## Configuración del entorno
-
-Primero conectaremos el entorno con la devnet, lo que tambien procederá a la creación de una wallet. Para eso daremos clic en donde dice **Not Conected**:
-
-![playground1](./images/playground1.png)
-
-Saldrá la siguiente ventana donde daremos en el botón **Continue**:
-
-![wallet](./images/wallet.png)
-
-Como resultado se mostrará la siguiente información:
-
-![status](./images/status.png)
-
-* En verde: el estado de la conexión y el entorno al que se encuentra conectado
-
-* En amarillo: la la dirección de la wallet conectada
-
-* En azul: la cantidad de tokens en la wallet
-
-> ℹ️ ¿Quieres ver el ejemplo de un "Hola Mundo" en Solana?. Da clic aquí: 👉 [Ver Ejemplo](./build-deploy/README.md)
-
-> ℹ️ ¿Cuentas con una Wallet de [Phantom](https://phantom.com/) que deseas importar?, Da clic aquí para ver como hacerlo: 
-
-👉 [Como Importar una Wallet](./import-key-a-playground/README.md)
-
-## ¿Listo para empezar?
-
-El primer paso es hacer `fork` al repositorio. Ya con el repositorio en tu cuenta lo siguiente que debes hacer es entrar a la carpeta `proyecto` y obtener el `permalink`:
-
-![permalink](./images/permalink.png)
-
-El cual uniremos con el siguiente enlace en nuestro navegador de preferencia:
-
-```url
-https://beta.solpg.io/
-```
-
-Lo que nos dará algo parecido a:
-
-![url](./images/url.png)
-
-Al pulsar enter seremos enviados al `Solana Playground` con nuestro proyecto abierto:
-
-![pg](./images/pg.png)
-
-Para guardarlo solo damos clic en el boton `import` y asignamos un nombre:
-
-![import](./images/import.png)
-
-## ¿Como actualizo mi repositorio?
-
-Una vez que realices cambios o termines tu proyecto, es necesario que **copies todo el código**, ya con el código en el portapapeles nos dirigimos nuevamente a la carpeta proyecto de tu repositorio de github **donde se obtuvo el `permalink`**, donde entraremos al carpeta `src` y al archivo `lib.rs`:
-
-![edit](./images/edit.png)
-
-En `lib.rs` presionaremos el ícono en forma de lapiz (esquina superior derecha de la imagen 👆)
-
-Nuevamente seleccionamos todo el código pero ahora presionamos `ctrl + v` para pegar el código del `Playground`. Ya realizados los cambios presionamos el botón `Commit changes`:
-
-![commit](./images/commit.png)
-
-Nos aparecerá un menú de confirmación donde nuevamente presionamos el botón `Commit changes`:
-
-![commit2](./images/commit2.png)
+### Curso
+```rust
+pub struct Curso {
+    pub owner: Pubkey,          // Dueño del curso
+    pub id_curso: u64,          // ID único del curso
+    pub nombre: String,         // Nombre (máx 50 chars)
+    pub descripcion: String,    // Descripción (máx 200 chars)
+    pub total_modulos: u8,      // Total de módulos (1-50)
+    pub badges_creados: u8,     // Cantidad de badges
+    pub badges: Vec<Pubkey>,    // Direcciones de badges
+}
+pub struct Badge {
+    pub curso: Pubkey,          // Curso al que pertenece
+    pub id_badge: u64,          // ID único del badge
+    pub nombre: String,         // Nombre (máx 40 chars)
+    pub descripcion: String,    // Descripción (máx 150 chars)
+    pub modulo_requerido: u8,   // Módulo necesario
+}
+pub struct EstudianteBadge {
+    pub estudiante: Pubkey,     // Estudiante que lo obtuvo
+    pub badge: Pubkey,          // Badge obtenido
+    pub curso: Pubkey,          // Curso relacionado
+    pub obtenido_en: i64,       // Timestamp de obtención
+}
